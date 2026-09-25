@@ -1,0 +1,14 @@
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/*.tfvars
+crash.log
+
+# Ansible
+ansible/.vault_pass
+*.retry
+
+# macOS
+.DS_Store
+
