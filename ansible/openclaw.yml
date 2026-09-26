@@ -34,5 +34,20 @@
       community.general.npm:
         name: openclaw
         global: true
-        state: present
+        version: "2026.9.6"
+
+    - name: Linger, so openclaw's user services run without a login
+      ansible.builtin.command: loginctl enable-linger openclaw
+      args:
+        creates: /var/lib/systemd/linger/openclaw
+
+    - name: Gateway service
+      ansible.builtin.command: openclaw gateway install
+      args:
+        creates: /home/openclaw/.config/systemd/user/openclaw-gateway.service
+      become: true
+      become_method: ansible.builtin.su
+      become_user: openclaw
+      environment:
+        XDG_RUNTIME_DIR: /run/user/1000
 
