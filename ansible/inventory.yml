@@ -1,0 +1,8 @@
+all:
+  vars:
+    domain: alters.si
+  hosts:
+    openclaw-01:
+      ansible_host: 10.0.10.23
+      ansible_user: root
+
