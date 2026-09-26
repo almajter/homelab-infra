@@ -50,4 +50,21 @@
       become_user: openclaw
       environment:
         XDG_RUNTIME_DIR: /run/user/1000
+    - name: nftables
+      ansible.builtin.apt: { name: nftables, install_recommends: false }
+
+    - name: Firewall, gateway port reachable from proxy-01
+      ansible.builtin.template:
+        src: templates/nftables.conf.j2
+        dest: /etc/nftables.conf
+        mode: "0644"
+        validate: nft -c -f %s
+      notify: Reload nftables
+
+    - name: nftables on at boot
+      ansible.builtin.systemd: { name: nftables, enabled: true, state: started }
+
+  handlers:
+    - name: Reload nftables
+      ansible.builtin.systemd: { name: nftables, state: reloaded }
 
