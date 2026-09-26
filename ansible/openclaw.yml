@@ -1,0 +1,38 @@
+- name: openclaw-01 base
+  hosts: openclaw-01
+  tasks:
+    - name: Base packages
+      ansible.builtin.apt:
+        name: [curl, ca-certificates, git]
+        install_recommends: false
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: NodeSource repo
+      ansible.builtin.deb822_repository:
+        name: nodesource
+        types: deb
+        uris: https://deb.nodesource.com/node_24.x
+        suites: nodistro
+        components: main
+        signed_by: https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
+
+    - name: Node.js
+      ansible.builtin.apt:
+        name: nodejs
+        install_recommends: false
+        update_cache: true
+        cache_valid_time: 0
+
+    - name: Service user
+      ansible.builtin.user:
+        name: openclaw
+        shell: /bin/bash
+        create_home: true
+
+    - name: OpenClaw CLI
+      community.general.npm:
+        name: openclaw
+        global: true
+        state: present
+
